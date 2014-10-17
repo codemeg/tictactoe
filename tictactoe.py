@@ -2,15 +2,12 @@ import pygame
 import time
 from random import randint, choice, shuffle
 
-# Define some colors
 BLACK    = (   0,   0,   0)
 WHITE    = ( 255, 255, 255)
 GREEN    = (   0, 255,   0)
-RED      = ( 255,   0,   0)
 
 pygame.init()
   
-# Set the width and height of the screen [width, height]
 width = 346
 height = 400
 size = (width, height)
@@ -20,15 +17,8 @@ margin = 20
 line_width = 3
  
 pygame.display.set_caption("Tic Tac Toe")
- 
-#Loop until the user clicks the close button.
 done = False
- 
-# Used to manage how fast the screen updates
 clock = pygame.time.Clock()
-
-#Hide the mouse cursor
-#pygame.mouse.set_visible(False)
 
 class Game():
 	def __init__(self):
@@ -55,7 +45,6 @@ class Game():
 		else:
 			print "YES OR NO."
 
-
 def draw_x(screen, x, y):
 	pygame.draw.line(screen, BLACK, [35+y*100,25+x*100], [105+y*100,115+x*100], line_width)
 	pygame.draw.line(screen, BLACK, [105+y*100,25+x*100], [35+y*100,115+x*100], line_width)
@@ -78,14 +67,8 @@ def draw_positions(positions):
 			draw_o(screen,x,y)
 
 def draw_text(text):
-	# Select the font to use. Default font, 25 pt size.
 	font = pygame.font.Font(None, 32)
-	
-	# Render the text. "True" means anti-aliased text.
-	# This line creates an image of the letters, but does not put it on the screen yet.
 	text_to_draw = font.render(text,True,BLACK)
-	
-	# Put the image of the text on the screen at 600x600
 	screen.blit(text_to_draw, [20,340])
 
 def draw_everything(screen,positions,text):
@@ -107,7 +90,7 @@ def i_to_xy(i):
 	return (row, col)
 
 def win(positions):
-
+	"""Returns whether the game is won, which player won"""
 	#Check rows
 	for x in range(3):
 		if positions[xy_to_i(x, 0)] == positions[xy_to_i(x, 1)] == positions[xy_to_i(x, 2)]:
@@ -139,11 +122,8 @@ def win(positions):
 	#If none of the above		
 	return {"won":False, "winner":0}
 
-
 def about_to_win(positions):
-
 	"""Returns player about to win, position"""
-
 	ones = 0
 	twos = 0
 	which_player = 0
@@ -228,8 +208,6 @@ def about_to_win(positions):
 
 	return 0, None
 
-
-
 def stalemate(positions):
 	count = 0
 	for i in range(9):
@@ -271,7 +249,6 @@ def show_stats(player_one_name,player_one_wins,player_two_name,player_two_wins,s
 	pygame.display.flip()
 	clock.tick(60)
 	time.sleep(5)
-
 
 def game_not_over(positions):
 	is_game_won = win(positions)["won"]
@@ -380,26 +357,19 @@ else:
 	whose_turn = 2
 	print "Sorry! %s gets to go first! \n" % (player_two_name)
 
-# -------- Main Program Loop -----------
 while not done:
 	
-    # --- Main event loop
-    for event in pygame.event.get(): # User did something
-        if event.type == pygame.QUIT: # If user clicked close
-            done = True # Flag that we are done so we exit this loop
-
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
 	    if event.type == pygame.KEYDOWN:
 	    	key = pygame.key.name(event.key)
 
-	    # --- Game logic should go here
-		#draw_everything(screen,positions,"Welcome to TicTacToe! One player or two player?")
-
 	while g.keep_playing:
-
 		while game_not_over(positions):
 			draw_everything(screen,positions,"")
-		#Main game play		
-			
+
+			#Main game play		
 			taking_turns(whose_turn,positions)
 			draw_everything(screen,positions,"")
 			whose_turn += 1
@@ -416,33 +386,10 @@ while not done:
 				player_two_wins += 1
 				print "*****%s won.***** \n" % (player_two_name)
 			
-
 		show_stats(player_one_name,player_one_wins,player_two_name,player_two_wins,stalemates)
 
 		#Checking if they want to play again
 		g.ask_keep_playing()
-
-		
-
 		positions = [0]*9		
-	
-     
-# Close the window and quit.
-# If you forget this line, the program will 'hang'
-# on exit if running from IDLE.
+
 pygame.quit()
-
-
-
-
-"""
-Strategy:
-
-	4a. Prefer corners adjacent to square you own.
-5. Put one adjacent to one you own, along a free path.
-
-"""
-
-
-
-
